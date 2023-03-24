@@ -70,14 +70,12 @@ type WorkTimeAction struct { // 工作时间
 
 func (*WorkTimeAction) Execute(a *ActionInfo) bool {
 	if a.info.handlerType == GroupHandler {
-		fmt.Printf("limit: %t, start: %d, end: %d\n", a.handler.config.WorkTimeLimit, a.handler.config.WorkTimeStart, a.handler.config.WorkTimeEnd)
 		if a.handler.config.WorkTimeLimit {
 			cstZone := time.FixedZone("CST", 8*3600) // 指定东8区
 			h := time.Now().In(cstZone).Hour()
-			fmt.Printf("now: %d", h)
 			start := a.handler.config.WorkTimeStart
 			end := a.handler.config.WorkTimeEnd
-			if h < start || h > end {
+			if h < start || h >= end {
 				replyMsg(*a.ctx, fmt.Sprintf(
 					"🤖️：非工作时间，请于 '%d点 ~ %d点' 时间段尝试～\n", start, end), a.info.msgId)
 				return false
