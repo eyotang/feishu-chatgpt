@@ -51,9 +51,9 @@ func LoadConfig(cfg string) *Config {
 		KeyFile:                    getViperStringValue("KEY_FILE", "key.pem"),
 		OpenaiApiUrl:               getViperStringValue("API_URL", "https://api.openai.com"),
 		HttpProxy:                  getViperStringValue("HTTP_PROXY", ""),
-		WorkTimeLimit:              getViperBoolValue("WORK_TIME.LIMIT", true),
-		WorkTimeStart:              getViperIntValue("WORK_TIME.START", 10),
-		WorkTimeEnd:                getViperIntValue("WORK_TIME.END", 19),
+		WorkTimeLimit:              getViperBoolValue("WORK_TIME_LIMIT", true),
+		WorkTimeStart:              getViperIntValue("WORK_TIME_START", 10),
+		WorkTimeEnd:                getViperIntValue("WORK_TIME_END", 19),
 	}
 
 	return config
