@@ -2,11 +2,10 @@ package initialization
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -23,6 +22,9 @@ type Config struct {
 	KeyFile                    string
 	OpenaiApiUrl               string
 	HttpProxy                  string
+	WorkTimeLimit              bool
+	WorkTimeStart              int
+	WorkTimeEnd                int
 }
 
 func LoadConfig(cfg string) *Config {
@@ -49,6 +51,9 @@ func LoadConfig(cfg string) *Config {
 		KeyFile:                    getViperStringValue("KEY_FILE", "key.pem"),
 		OpenaiApiUrl:               getViperStringValue("API_URL", "https://api.openai.com"),
 		HttpProxy:                  getViperStringValue("HTTP_PROXY", ""),
+		WorkTimeLimit:              getViperBoolValue("WORK_TIME.LIMIT", true),
+		WorkTimeStart:              getViperIntValue("WORK_TIME.START", 10),
+		WorkTimeEnd:                getViperIntValue("WORK_TIME.END", 19),
 	}
 
 	return config
@@ -62,8 +67,8 @@ func getViperStringValue(key string, defaultValue string) string {
 	return value
 }
 
-//OPENAI_KEY: sk-xxx,sk-xxx,sk-xxx
-//result:[sk-xxx sk-xxx sk-xxx]
+// OPENAI_KEY: sk-xxx,sk-xxx,sk-xxx
+// result:[sk-xxx sk-xxx sk-xxx]
 func getViperStringArray(key string, defaultValue []string) []string {
 	value := viper.GetString(key)
 	if value == "" {

@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
+
 	"start-feishubot/initialization"
 	"start-feishubot/services"
 	"start-feishubot/services/openai"
@@ -61,6 +63,26 @@ func (*ProcessMentionAction) Execute(a *ActionInfo) bool {
 		return false
 	}
 	return false
+}
+
+type WorkTimeAction struct { // 工作时间
+}
+
+func (*WorkTimeAction) Execute(a *ActionInfo) bool {
+	if a.info.handlerType == GroupHandler {
+		if a.handler.config.WorkTimeLimit {
+			cstZone := time.FixedZone("CST", 8*3600) // 指定东8区
+			h := time.Now().In(cstZone).Hour()
+			start := a.handler.config.WorkTimeStart
+			end := a.handler.config.WorkTimeEnd
+			if h < start || h > end {
+				replyMsg(*a.ctx, fmt.Sprintf(
+					"🤖️：非工作时间，请于 '%d点 ~ %d点' 时间段尝试～\n", start, end), a.info.msgId)
+				return false
+			}
+		}
+	}
+	return true
 }
 
 type EmptyAction struct { /*空消息*/
