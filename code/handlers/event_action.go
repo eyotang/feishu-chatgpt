@@ -77,7 +77,7 @@ func (*WorkTimeAction) Execute(a *ActionInfo) bool {
 			end := a.handler.config.WorkTimeEnd
 			if h < start || h >= end {
 				replyMsg(*a.ctx, fmt.Sprintf(
-					"🤖️：非工作时间，请于 '%d点 ~ %d点' 时间段尝试～\n", start, end), a.info.msgId)
+					"🤖️：非工作时间，请于 %d点 ~ %d点 时间段尝试～\n", start, end), a.info.msgId)
 				return false
 			}
 		}
