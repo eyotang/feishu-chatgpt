@@ -12,6 +12,7 @@ import (
 	"start-feishubot/utils"
 	"start-feishubot/utils/audio"
 
+	"github.com/bastengao/chinese-holidays-go/holidays"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
@@ -72,12 +73,28 @@ func (*WorkTimeAction) Execute(a *ActionInfo) bool {
 	if a.info.handlerType == GroupHandler {
 		if a.handler.config.WorkTimeLimit {
 			cstZone := time.FixedZone("CST", 8*3600) // 指定东8区
-			h := time.Now().In(cstZone).Hour()
+			cstNow := time.Now().In(cstZone)
+			h := cstNow.Hour()
 			start := a.handler.config.WorkTimeStart
 			end := a.handler.config.WorkTimeEnd
 			if h < start || h >= end {
 				replyMsg(*a.ctx, fmt.Sprintf(
-					"🤖️：非工作时间，请于 %d点 ~ %d点 时间段尝试～\n", start, end), a.info.msgId)
+					"🤖️：非工作时间，请于工作日 %d点 ~ %d点 时间段尝试～\n", start, end), a.info.msgId)
+				return false
+			}
+			queryer, err := holidays.BundleQueryer()
+			if err != nil {
+				fmt.Printf("构建查询，查询工作日失败: err: %+v\n", err)
+				return false
+			}
+			yes, err := queryer.IsHoliday(cstNow)
+			if err != nil {
+				fmt.Printf("查询工作日失败: err: %+v\n", err)
+				return false
+			}
+			if yes {
+				replyMsg(*a.ctx, fmt.Sprintf(
+					"🤖️：非工作时间，请于工作日 %d点 ~ %d点 时间段尝试～\n", start, end), a.info.msgId)
 				return false
 			}
 		}
