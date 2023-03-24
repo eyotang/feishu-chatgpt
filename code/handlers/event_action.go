@@ -12,7 +12,7 @@ import (
 	"start-feishubot/utils"
 	"start-feishubot/utils/audio"
 
-	"github.com/bastengao/chinese-holidays-go/holidays"
+	"github.com/eyotang/chinese-holidays-go/holidays"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
